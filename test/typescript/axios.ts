@@ -20,7 +20,10 @@ const config: AxiosRequestConfig = {
   ],
   headers: { 'X-FOO': 'bar' },
   params: { id: 12345 },
-  paramsSerializer: (params: any) => 'id=12345',
+  paramsSerializer: {
+    indexes: true,
+    encode: (value) => value
+  },
   data: { foo: 'bar' },
   timeout: 10000,
   withCredentials: true,
@@ -251,6 +254,8 @@ instance1.post('/user', { foo: 'bar' }, { headers: { 'X-FOO': 'bar' } })
 
 // Defaults
 
+axios.defaults.headers['X-FOO'];
+
 axios.defaults.baseURL = 'https://api.example.com/';
 axios.defaults.headers.common['Authorization'] = 'token';
 axios.defaults.headers.post['X-FOO'] = 'bar';
@@ -260,6 +265,11 @@ instance1.defaults.baseURL = 'https://api.example.com/';
 instance1.defaults.headers.common['Authorization'] = 'token';
 instance1.defaults.headers.post['X-FOO'] = 'bar';
 instance1.defaults.timeout = 2500;
+
+// axios create defaults
+
+axios.create({ headers: { foo: 'bar' } });
+axios.create({ headers: { common: { foo: 'bar' } } });
 
 // Interceptors
 
@@ -375,3 +385,7 @@ axios.get('/user')
 // FormData
 
 axios.toFormData({x: 1}, new FormData());
+
+// AbortSignal
+
+axios.get('/user', {signal: new AbortController().signal});
